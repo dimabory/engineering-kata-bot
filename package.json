@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/orchestrator.js",
-    "dev": "ts-node src/orchestrator.ts",
+    "preview": "DRY_RUN=true ts-node src/orchestrator.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

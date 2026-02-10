@@ -12,21 +12,25 @@ interface Config {
   REDDIT_USERNAME: string;
   REDDIT_PASSWORD: string;
   DRY_RUN: boolean;
+  GEMINI_MODEL: string;
 }
 
-const getEnv = (key: string): string => {
+const isDryRun = process.env.DRY_RUN === 'true';
+
+const getEnv = (key: string, required: boolean = true): string => {
   const value = process.env[key];
-  if (!value) {
+  if (!value && required) {
     throw new Error(`Missing environment variable: ${key}`);
   }
-  return value;
+  return value || '';
 };
 
 export const config: Config = {
-  GEMINI_API_KEY: getEnv('GEMINI_API_KEY'),
-  REDDIT_CLIENT_ID: getEnv('REDDIT_CLIENT_ID'),
-  REDDIT_CLIENT_SECRET: getEnv('REDDIT_CLIENT_SECRET'),
-  REDDIT_USERNAME: getEnv('REDDIT_USERNAME'),
-  REDDIT_PASSWORD: getEnv('REDDIT_PASSWORD'),
-  DRY_RUN: process.env.DRY_RUN === 'true',
+  GEMINI_API_KEY: getEnv('GEMINI_API_KEY', true), // Required for both dry-run and prod
+  REDDIT_CLIENT_ID: getEnv('REDDIT_CLIENT_ID', !isDryRun),
+  REDDIT_CLIENT_SECRET: getEnv('REDDIT_CLIENT_SECRET', !isDryRun),
+  REDDIT_USERNAME: getEnv('REDDIT_USERNAME', !isDryRun),
+  REDDIT_PASSWORD: getEnv('REDDIT_PASSWORD', !isDryRun),
+  DRY_RUN: isDryRun,
+  GEMINI_MODEL: process.env.GEMINI_MODEL || 'gemini-2.5-pro',
 };

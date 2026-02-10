@@ -7,7 +7,7 @@ import { SYSTEM_PROMPT } from './prompt';
 const genAI = new GoogleGenerativeAI(config.GEMINI_API_KEY);
 
 export class Brain {
-  private model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+  private model = genAI.getGenerativeModel({ model: config.GEMINI_MODEL });
 
   public getTopic(date: Date = new Date()): TopicType {
     const schedule = [
@@ -27,13 +27,13 @@ export class Brain {
       throw new Error('No challenge generation on weekends.');
     }
 
-    if (config.DRY_RUN) {
-        return {
-            title: "Mock Challenge Title",
-            body: "This is a mock challenge body for dry run purposes.",
-            tag: topic
-        };
-    }
+    // if (config.DRY_RUN) {
+    //     return {
+    //         title: "Mock Challenge Title",
+    //         body: "This is a mock challenge body for dry run purposes.",
+    //         tag: topic
+    //     };
+    // }
 
     const prompt = `
       ${SYSTEM_PROMPT}

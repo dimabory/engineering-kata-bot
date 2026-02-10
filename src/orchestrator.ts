@@ -21,9 +21,9 @@ const main = async () => {
 
     if (config.DRY_RUN) {
       console.log('--- DRY RUN ---');
-      console.log(`TITLE: ${challenge.title}`);
-      console.log(`BODY:\n${challenge.body}`);
-      console.log(`TAG: ${challenge.tag}`);
+      console.log(`# ${challenge.title}\n`);
+      console.log(`${challenge.body}`);
+      console.log(`\nTAG: ${challenge.tag}`);
       console.log('--- END DRY RUN ---');
     } else {
         console.log('Posting to Reddit...');

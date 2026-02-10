@@ -70,7 +70,7 @@ This project is configured to run via **GitHub Actions** on a schedule (Mon-Fri 
     3.  In the left sidebar, click **Secrets and variables** > **Actions**.
     4.  Click **New repository secret**.
     5.  Add the following secrets one by one:
-        - `GEMINI_API_KEY`: Your Google Gemini API Key.
+        - `GEMINI_API_KEY`: Your Google Gemini API Key. ([Get key here](https://aistudio.google.com/app/apikey))
         - `REDDIT_CLIENT_ID`: Your Reddit App Client ID.
         - `REDDIT_CLIENT_SECRET`: Your Reddit App Client Secret.
         - `REDDIT_USERNAME`: Your Reddit Username.
