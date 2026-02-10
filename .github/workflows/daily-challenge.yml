@@ -1,0 +1,41 @@
+
+name: Daily Challenge
+
+on:
+  schedule:
+    # Runs at 07:30 UTC every Monday through Friday
+    # 07:30 UTC is:
+    # 08:30 CET (Central Europe)
+    # 09:30 EET (Eastern Europe)
+    # 02:30 EST (US East Coast)
+    # 23:30 PST (US West Coast previous day)
+    - cron: '30 07 * * 1-5'
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build TypeScript
+        run: npx tsc
+
+      - name: Run Orchestrator
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+          REDDIT_USERNAME: ${{ secrets.REDDIT_USERNAME }}
+          REDDIT_PASSWORD: ${{ secrets.REDDIT_PASSWORD }}
+          DRY_RUN: 'false'
+        run: node dist/orchestrator.js
