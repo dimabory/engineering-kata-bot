@@ -62,10 +62,18 @@ npm start
 This project is configured to run via **GitHub Actions** on a schedule (Mon-Fri at 09:30 Local Time / 07:30 UTC).
 
 1.  Push the code to your GitHub repository.
-2.  Add the required secrets to your repository's **Settings > Secrets and variables > Actions**:
-    - `GEMINI_API_KEY`
-    - `REDDIT_CLIENT_ID`
-    - `REDDIT_CLIENT_SECRET`
-    - `REDDIT_USERNAME`
-    - `REDDIT_PASSWORD`
+
+2.  **Configure Repository Secrets:**
+    The GitHub Action needs access to your API keys.
+    1.  Go to your repository on GitHub.
+    2.  Click **Settings** (top tab).
+    3.  In the left sidebar, click **Secrets and variables** > **Actions**.
+    4.  Click **New repository secret**.
+    5.  Add the following secrets one by one:
+        - `GEMINI_API_KEY`: Your Google Gemini API Key.
+        - `REDDIT_CLIENT_ID`: Your Reddit App Client ID.
+        - `REDDIT_CLIENT_SECRET`: Your Reddit App Client Secret.
+        - `REDDIT_USERNAME`: Your Reddit Username.
+        - `REDDIT_PASSWORD`: Your Reddit Password.
+
 3.   The workflow `.github/workflows/daily-challenge.yml` will automatically run on schedule.
