@@ -1,13 +1,15 @@
-
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { config } from './config';
 import { Challenge, TopicType } from './types';
 import { SYSTEM_PROMPT } from './prompt';
-
-const genAI = new GoogleGenerativeAI(config.GEMINI_API_KEY);
+import { AIProvider } from './ai/interface';
+import { GeminiAdapter } from './ai/gemini-adapter';
 
 export class Brain {
-  private model = genAI.getGenerativeModel({ model: config.GEMINI_MODEL });
+  private aiProvider: AIProvider;
+
+  constructor(aiProvider?: AIProvider) {
+    this.aiProvider = aiProvider || new GeminiAdapter(config.GEMINI_API_KEY, config.GEMINI_MODEL);
+  }
 
   public getTopic(date: Date = new Date()): TopicType {
     const schedule = [
@@ -27,14 +29,6 @@ export class Brain {
       throw new Error('No challenge generation on weekends.');
     }
 
-    // if (config.DRY_RUN) {
-    //     return {
-    //         title: "Mock Challenge Title",
-    //         body: "This is a mock challenge body for dry run purposes.",
-    //         tag: topic
-    //     };
-    // }
-
     const prompt = `
       ${SYSTEM_PROMPT}
 
@@ -43,25 +37,19 @@ export class Brain {
       The assigned topic is: ${topic}
     `;
 
-    const result = await this.model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
+    const text = await this.aiProvider.generateText(prompt);
 
     return this.parseResponse(text);
   }
 
   private parseResponse(text: string): Challenge {
-    // Basic parsing logic. Robustness can be improved.
     const titleMatch = text.match(/TITLE:\s*(.+)/);
     const tagMatch = text.match(/TAG:\s*(.+)/);
-    
-    // Extract body: everything between TITLE line and TAG line
     const bodyMatch = text.match(/BODY:\s*([\s\S]*?)TAG:/);
 
     if (!titleMatch || !bodyMatch || !tagMatch) {
-       // Fallback or error. For now, throw error which Orchestrator will handle.
-       console.error("Malformed response from Gemini:", text);
-       throw new Error("Failed to parse Gemini response. Ensure TITLE, BODY, and TAG are present.");
+       console.error("Malformed response from AI:", text);
+       throw new Error("Failed to parse AI response. Ensure TITLE, BODY, and TAG are present.");
     }
 
     return {
